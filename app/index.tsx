@@ -132,7 +132,7 @@ export default function Home() {
     try {
       setLoading(true);
       const response = await axios.get(
-        'http://api.aladhan.com/v1/timings',
+        'https://api.aladhan.com/v1/timings',
         {
           params: {
             latitude: loc.latitude,
