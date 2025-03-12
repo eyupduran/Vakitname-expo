@@ -122,8 +122,8 @@ export default function RootLayout() {
           headerShown: false,
           animation: 'slide_from_right'
         }}>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="map" options={{ headerShown: false }} />
+          <Stack.Screen name="index" />
+          <Stack.Screen name="map" />
           <Stack.Screen name="+not-found" options={{ presentation: 'modal' }} />
         </Stack>
         <AppStatusBar />
