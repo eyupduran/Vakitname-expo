@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Box, VStack, Text, Heading, useColorMode, IconButton, HStack, Spinner, useToast, ScrollView, Pressable, Badge, Center } from 'native-base';
-import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
@@ -120,24 +119,21 @@ export default function Home() {
     
     try {
       setLoading(true);
-      const response = await axios.get(
-        'https://api.aladhan.com/v1/timings',
-        {
-          params: {
-            latitude: loc.latitude,
-            longitude: loc.longitude,
-            method: 13,
-            adjustment: 1
-          }
-        }
+      const response = await fetch(
+        `https://api.aladhan.com/v1/timings?latitude=${loc.latitude}&longitude=${loc.longitude}&method=13&adjustment=1`
       );
 
-      const hijriDate = response.data.data.date.hijri;
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      const hijriDate = data.data.date.hijri;
       const isRamadan = hijriDate.month.number === 9;
       
-      setPrayerTimes(response.data.data.timings);
-      calculateNextPrayer(response.data.data.timings, isRamadan);
-      await AsyncStorage.setItem('lastPrayerTimes', JSON.stringify(response.data.data.timings));
+      setPrayerTimes(data.data.timings);
+      calculateNextPrayer(data.data.timings, isRamadan);
+      await AsyncStorage.setItem('lastPrayerTimes', JSON.stringify(data.data.timings));
       await AsyncStorage.setItem('lastUpdate', new Date().toISOString());
     } catch (error) {
       showToast("Hata", "Namaz vakitleri yüklenirken bir hata oluştu", "error");

@@ -57,6 +57,16 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Bulunduğunuz şehrin namaz vakitlerini göstermek için konum izni gereklidir."
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "useLegacyPackaging": true
+          }
+        }
       ]
     ],
     "experiments": {

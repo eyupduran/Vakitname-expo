@@ -1,14 +1,9 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import 'react-native-reanimated';
-import { NativeBaseProvider, extendTheme, useColorMode, StorageManager } from 'native-base';
+import { NativeBaseProvider, extendTheme, useColorMode, StorageManager, StatusBar } from 'native-base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -93,31 +88,16 @@ const theme = extendTheme({
   },
 });
 
-// StatusBar için ayrı bir bileşen oluşturuyoruz
-function AppStatusBar() {
-  const { colorMode } = useColorMode();
-  return <StatusBar style={colorMode === 'dark' ? 'light' : 'dark'} />;
-}
-
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  const { colorMode } = useColorMode();
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
+    SplashScreen.hideAsync();
+  }, []);
 
   return (
     <NativeBaseProvider theme={theme} colorModeManager={colorModeManager}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <ThemeProvider value={colorMode === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack screenOptions={{ 
           headerShown: false,
           animation: 'slide_from_right'
@@ -126,7 +106,7 @@ export default function RootLayout() {
           <Stack.Screen name="map" />
           <Stack.Screen name="+not-found" options={{ presentation: 'modal' }} />
         </Stack>
-        <AppStatusBar />
+        <StatusBar />
       </ThemeProvider>
     </NativeBaseProvider>
   );
